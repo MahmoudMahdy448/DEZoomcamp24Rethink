@@ -4,7 +4,7 @@ URL="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yell
 
 docker run -it \
   --network=${NETWORK} \
-  ingest-data:v001 \
+  ingest_data:v001 \
   --user=${USER} \
   --password=${PASSWORD} \
   --host=${HOST} \
