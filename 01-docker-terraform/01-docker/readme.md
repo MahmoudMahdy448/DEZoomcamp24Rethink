@@ -1,6 +1,6 @@
-# Running Docker-Terraform Environment
+# Running Docker Environment
 
-This repository contains a Docker-Terraform environment for setting up a PostgreSQL database and pgAdmin. Follow the steps below to get started:
+This repository contains a Docker environment for setting up a PostgreSQL database and pgAdmin. Follow the steps below to get started:
 
 ### Prerequisites
 - Docker installed on your machine
