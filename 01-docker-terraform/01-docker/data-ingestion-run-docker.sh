@@ -4,11 +4,11 @@ URL="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yell
 
 docker run -it \
   --network=${NETWORK} \
-  ingest_data:v001 \
-  --user=${USER} \
-  --password=${PASSWORD} \
-  --host=${HOST} \
-  --port=${PORT} \
-  --db=${DB} \
-  --table_name=${TABLE_NAME} \
-  --url=${URL}
+  taxi_ingest:v001 \
+    --user=${USER} \
+    --password=${PASSWORD} \
+    --host=pg-database \
+    --port=${PORT} \
+    --db=${DB} \
+    --table_name=${TABLE_NAME} \
+    --url=${URL}

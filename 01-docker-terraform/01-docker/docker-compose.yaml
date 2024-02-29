@@ -9,6 +9,9 @@ services:
       - "./ny_taxi_postgres_data:/var/lib/postgresql/data:rw"
     ports:
       - "5432:5432"
+    networks:
+      - pg-network
+
   pgadmin:
     image: dpage/pgadmin4
     environment:
@@ -18,5 +21,12 @@ services:
       - "./pgadmin_data:/var/lib/pgadmin/data:rw"
     ports:
       - "8080:80"
+    networks:
+      - pg-network
+
 volumes:
   pgadmin_data:
+
+networks:
+  pg-network:
+    external: true
