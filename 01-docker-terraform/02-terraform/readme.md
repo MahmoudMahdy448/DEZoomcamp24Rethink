@@ -400,7 +400,7 @@ These commands are part of the basic workflow of using Terraform to manage infra
     These variables can be used in other Terraform configuration files in the same directory. If no value is provided when running `terraform apply`, the default value will be used.
 
 
-    2. then the `main.tf` file should look like this: notice we are mapping from the `variables.tf`
+2. then the `main.tf` file should look like this: notice we are mapping from the `variables.tf`
  file using the var. in each variable.
     
    ```hcl
@@ -440,10 +440,8 @@ These commands are part of the basic workflow of using Terraform to manage infra
       location   = var.location
     }
     ```
-
-
-
-    3. In Terraform, functions are used to transform and combine values. The `file()` function is one of these built-in functions.
+    
+3. In Terraform, functions are used to transform and combine values. The `file()` function is one of these built-in functions.
     - `file(PATH)`: The `file` function reads the contents of a file at the given path and returns them as a string. This is often used to load data files or scripts that are needed by a resource during its creation.
     - so we can now $ unset GOOGLE_CREDENTIALS to forget the the credentials file and declare it as a variable, in the `variables.tf` file then we can use this `file(PATH)` function in the `main.tf` file :
         
