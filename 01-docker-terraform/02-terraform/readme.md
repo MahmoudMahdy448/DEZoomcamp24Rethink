@@ -338,6 +338,13 @@ Terraform commands that we’ve used so far:
 These commands are part of the basic workflow of using Terraform to manage infrastructure.
 
 
+
+
+
+
+
+
+
 # 2. Terraform variables
 
 1. The `variables.tf` file in Terraform is typically used to declare variables that will be used across your Terraform configuration files.
