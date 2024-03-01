@@ -336,3 +336,127 @@ Terraform commands that we’ve used so far:
 5. `terraform destroy`: Removes all resources that exist in the current Terraform state. It's useful for cleanup, rebuilding infrastructure from scratch, and testing.
 
 These commands are part of the basic workflow of using Terraform to manage infrastructure.
+
+
+# 2. Terraform variables
+
+1. The `variables.tf` file in Terraform is typically used to declare variables that will be used across your Terraform configuration files.
+    
+    Variables in Terraform allow you to define values that can be reused in your configuration and provide a way to customize your configuration through parameters.
+    
+    Here's our `variables.tf` file:
+    
+    ```hcl
+    variable "project" {
+      description = "project"
+      default     = "nyc-tl-taxi"
+    
+    }
+    
+    variable "region" {
+      description = "Project region name"
+      default     = "us-central1"
+    
+    }
+    
+    variable "location" {
+      description = "Project location name"
+      default     = "US"
+    
+    }
+    
+    variable "bq_dataset_name" {
+      description = "my bigquery dataset name"
+      default     = "demo_bq_dataset"
+    }
+    
+    variable "gcs_bucket_name" {
+      description = "my storage bucket name"
+      default     = "nyc-tl-taxi-terra-bucket"
+    }
+    
+    variable "gcs_storage_class" {
+      description = "bucket storage class"
+      default     = "STANDARD"
+    }
+    ```
+    
+    This Terraform code declares several variables with default values:
+    
+    - `project`: The project name, default is "nyc-tl-taxi".
+    - `region`: The project region name, default is "us-central1".
+    - `location`: The project location name, default is "US".
+    - `bq_dataset_name`: The BigQuery dataset name, default is "demo_bq_dataset".
+    - `gcs_bucket_name`: The Google Cloud Storage bucket name, default is "nyc-tl-taxi-terra-bucket".
+    - `gcs_storage_class`: The storage class for the bucket, default is "STANDARD".
+    
+    These variables can be used in other Terraform configuration files in the same directory. If no value is provided when running `terraform apply`, the default value will be used.
+
+
+    2. then the `main.tf` file should look like this: notice we are mapping from the `variables.tf`
+ file using the var. in each variable.
+    
+   ```hcl
+    # main.tf
+    terraform {
+      required_providers {
+        google = {
+          source  = "hashicorp/google"
+          version = "5.18.0"
+        }
+      }
+    }
+    
+    provider "google" {
+      credentials = file(var.credentials_file_path)
+      project = var.project
+      region  = var.region
+    }
+    
+    resource "google_storage_bucket" "auto-expire" {
+      name          = var.gcs_bucket_name
+      location      = var.location
+      force_destroy = true
+    
+      lifecycle_rule {
+        condition {
+          age = 1
+        }
+        action {
+          type = "AbortIncompleteMultipartUpload"
+        }
+      }
+    }
+    
+    resource "google_bigquery_dataset" "demo_bq_dataset" {
+      dataset_id = var.bq_dataset_name
+      location   = var.location
+    }
+    ```
+
+
+
+    3. In Terraform, functions are used to transform and combine values. The `file()` function is one of these built-in functions.
+    - `file(PATH)`: The `file` function reads the contents of a file at the given path and returns them as a string. This is often used to load data files or scripts that are needed by a resource during its creation.
+    - so we can now $ unset GOOGLE_CREDENTIALS to forget the the credentials file and declare it as a variable, in the `variables.tf` file then we can use this `file(PATH)` function in the `main.tf` file :
+        
+        ```hcl
+        # variables.tf
+
+        variable "credentials_file_path" {
+            description = "value of the credentials file"
+            default     = "./keys/my-creds.json"
+          
+        }
+        
+        ```
+        
+        ```hcl
+        # main.tf
+
+        provider "google" {
+          credentials = file(var.credentials_file_path)
+          project = var.project
+          region  = var.region
+        }
+        ```

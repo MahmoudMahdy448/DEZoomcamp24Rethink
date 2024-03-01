@@ -8,14 +8,15 @@ terraform {
 }
 
 provider "google" {
-  project = "nyc-tl-taxi"
-  region  = "us-central1"
+  credentials = file(var.credentials_file_path)
+  project = var.project
+  region  = var.region
 }
 
 
 resource "google_storage_bucket" "auto-expire" {
-  name          = "nyc-tl-taxi-terra-bucket"
-  location      = "US"
+  name          = var.gcs_bucket_name
+  location      = var.location
   force_destroy = true
 
   lifecycle_rule {
@@ -26,4 +27,9 @@ resource "google_storage_bucket" "auto-expire" {
       type = "AbortIncompleteMultipartUpload"
     }
   }
+}
+
+resource "google_bigquery_dataset" "demo_bq_dataset" {
+  dataset_id = var.bq_dataset_name
+  location   = var.location
 }
